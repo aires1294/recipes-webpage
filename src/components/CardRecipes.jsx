@@ -22,6 +22,7 @@ function CardRecipes() {
   const { pathname } = useLocation();
 
   const { id } = useParams();
+  console.log(useParams());
 
   const { push } = useHistory();
 
@@ -72,21 +73,21 @@ function CardRecipes() {
   const handleCheck = (ingredient) => {
     const returnLocalStorage = getItem('inProgressRecipes');
     if (!check.some((e) => e === ingredient)) {
-      const obj = {
+      const localObject = {
         ...returnLocalStorage,
         [type]: { ...returnLocalStorage[type], [id]: [...check, ingredient] },
       };
-      setItem('inProgressRecipes', obj);
+      setItem('inProgressRecipes', localObject);
       setCheck([...check, ingredient]);
     } else {
-      const obj = {
+      const localObject = {
         ...returnLocalStorage,
         [type]: {
           ...returnLocalStorage[type],
           [id]: check.filter((e) => e !== ingredient),
         },
       };
-      setItem('inProgressRecipes', obj);
+      setItem('inProgressRecipes', localObject);
       setCheck(check.filter((e) => e !== ingredient));
     }
   };
