@@ -9,6 +9,7 @@ import ShareIcon from '../images/shareIcon.svg';
 export default function DrinkDetails({ history }) {
   const { apiRecipeDetails, setApiRecipeDetails } = useContext(myContext);
   const paramsUrl = useParams();
+  console.log(useParams());
   const [ingrediente, setIngrediente] = useState([]);
   const [measure, setMeasure] = useState([]);
   const [copyMessage, setCopyMessage] = useState(false);
