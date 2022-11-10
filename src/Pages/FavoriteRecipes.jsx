@@ -1,19 +1,24 @@
-// import React, { useState } from 'react';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
+import blackHeartIcon from '../images/blackHeartIcon.svg';
+import shareIcon from '../images/shareIcon.svg';
 
 function FavoriteRecipes() {
-  const [favoritesRecipes] = useState([]);
+  const [favoritesRecipes, setFavoritesRecipes] = useState([]);
 
-  const favoriteRecipes = useCallback(() => {
-    JSON.parse(localStorage.getItem('favoriteRecipes'));
-    console.log(favoriteRecipes);
+  const favoriteRecipes = () => {
+    setFavoritesRecipes(JSON.parse(localStorage.getItem('favoriteRecipes')) || []);
+  };
+
+  useEffect(() => {
+    favoriteRecipes();
   }, []);
 
   return (
     <main>
-      FavoriteRecipes!!!
       <Header />
+      Receitas Favoritas
+      <br />
       <button
         type="button"
         data-testid="filter-by-all-btn"
@@ -42,9 +47,19 @@ function FavoriteRecipes() {
             width="150px"
             data-testid={ `${index}-horizontal-image` }
           />
-          <p data-testid={ `${index}-horizontal-top-text` }>
-            { card.category }
-          </p>
+          {card.alcoholicOrNot.includes('Alcoholic')
+            ? (
+              <p data-testid={ `${index}-horizontal-top-text` }>
+                {card.alcoholicOrNot}
+              </p>)
+            : (
+              <p data-testid={ `${index}-horizontal-top-text` }>
+                { card.nationality}
+                {' '}
+                -
+                {' '}
+                { card.category }
+              </p>)}
           <p data-testid={ `${index}-horizontal-name` }>
             { card.name }
           </p>
@@ -55,12 +70,13 @@ function FavoriteRecipes() {
             value={ card.id }
             src={ blackHeartIcon }
           >
-            Favorite btn
-            {' '}
+            {/* Favorite btn
+            {' '} */}
             <img
               data-testid={ `${index}-horizontal-favorite-btn` }
-              src={ recipeFavorites.some((rec) => rec.id === recipe.id)
-                ? blackHeartIcon : whiteHeartIcon }
+              // src={ recipeFavorites.some((rec) => rec.id === recipe.id)
+              //   ? blackHeartIcon : whiteHeartIcon }
+              src={ blackHeartIcon }
               alt="Botão Favoritado"
             />
           </button>
@@ -68,10 +84,16 @@ function FavoriteRecipes() {
             type="button"
             data-testid={ `${index}-horizontal-share-btn` }
             value={ card.id }
+            src={ shareIcon }
           >
-            {' '}
+            {/* {' '}
             Share button
-            {' '}
+            {' '} */}
+            <img
+              data-testid="horizontal-share-btn"
+              src={ shareIcon }
+              alt="Botão Compartilhar"
+            />
           </button>
         </div>
       ))}
