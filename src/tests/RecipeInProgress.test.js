@@ -3,6 +3,7 @@ import { screen, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderWithRouter } from './helpers/renderWithRouter';
 import App from '../App';
+
 describe('Testando o componente Recipes In Progress', () => {
   test('Verificando as configurações das fotos no meals ', async () => {
     // renderWithRouter(<App />);
