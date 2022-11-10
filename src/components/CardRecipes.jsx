@@ -22,6 +22,7 @@ function CardRecipes() {
   const { pathname } = useLocation();
 
   const { id } = useParams();
+  console.log(useParams());
 
   const { push } = useHistory();
 
