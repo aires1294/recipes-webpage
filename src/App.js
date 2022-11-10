@@ -41,11 +41,11 @@ function App() {
         <Route exact path="/meals/:id" component={ MealDetails } />
         <Route
           exact
-          path="/meals/:id-da-receita/in-progress"
+          path="/meals/:id/in-progress"
           component={ RecipeInProgress }
         />
         <Route
-          path="/drinks/:id-da-receita/in-progress"
+          path="/drinks/:id/in-progress"
           component={ RecipeInProgress }
         />
       </Switch>
