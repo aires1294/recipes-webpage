@@ -5,15 +5,18 @@ import copy from 'clipboard-copy';
 import myContext from '../context/myContext';
 import MealsCarousel from './MealsCarousel';
 import ShareIcon from '../images/shareIcon.svg';
+import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+import blackHeartIcon from '../images/blackHeartIcon.svg';
 
 export default function DrinkDetails({ history }) {
   const { apiRecipeDetails, setApiRecipeDetails } = useContext(myContext);
   const paramsUrl = useParams();
-  console.log(useParams());
+  const paramsId = paramsUrl.id;
   const [ingrediente, setIngrediente] = useState([]);
   const [measure, setMeasure] = useState([]);
   const [copyMessage, setCopyMessage] = useState(false);
   const [favoritesDrinks, setFavoritesDrinks] = useState([]);
+  const [favorite, setFavorite] = useState(false);
   /* const [apiMealsDetails, setApiMealsDetails] = useContext(myContext); */
 
   const handleButtonDetails = () => {
@@ -36,7 +39,9 @@ export default function DrinkDetails({ history }) {
         && mesure[1] !== '' && mesure[1] !== null).map((mesure) => mesure[1]);
       setMeasure(getMesure);
       /* console.log(favoriteRecipes); */
-      setFavoritesDrinks(JSON.parse(localStorage.getItem('favoriteRecipes')) || []);
+      const saveFavorites = JSON.parse(localStorage.getItem('favoriteRecipes')) || [];
+      setFavoritesDrinks(saveFavorites);
+      setFavorite(saveFavorites.some((item) => item.id === paramsId));
     };
     setApi();
   }, []);
@@ -58,15 +63,26 @@ export default function DrinkDetails({ history }) {
   };
 
   const handleFavoriteButton = () => {
-    const newFavoritesDrinks = [...favoritesDrinks, {
-      id: apiRecipeDetails?.drinks[0].idDrink,
-      type: 'drink',
-      nationality: '',
-      category: apiRecipeDetails?.drinks[0].strCategory,
-      alcoholicOrNot: apiRecipeDetails?.drinks[0].strAlcoholic,
-      name: apiRecipeDetails?.drinks[0].strDrink,
-      image: apiRecipeDetails?.drinks[0].strDrinkThumb }];
-    localStorage.setItem('favoriteRecipes', JSON.stringify(newFavoritesDrinks));
+    if (favorite) {
+      const newFavoritesDrinks = favoritesDrinks
+        .filter((item) => item.id !== paramsId);
+      setFavoritesDrinks(newFavoritesDrinks);
+      localStorage.setItem('favoriteRecipes', JSON.stringify(newFavoritesDrinks));
+      setFavorite(false);
+    } else {
+      const newFavoritesDrinks = [...favoritesDrinks, {
+        id: apiRecipeDetails?.drinks[0].idDrink,
+        type: 'drink',
+        nationality: '',
+        category: apiRecipeDetails?.drinks[0].strCategory,
+        alcoholicOrNot: apiRecipeDetails?.drinks[0].strAlcoholic,
+        name: apiRecipeDetails?.drinks[0].strDrink,
+        image: apiRecipeDetails?.drinks[0].strDrinkThumb }];
+
+      setFavoritesDrinks(newFavoritesDrinks);
+      localStorage.setItem('favoriteRecipes', JSON.stringify(newFavoritesDrinks));
+      setFavorite(true);
+    }
   };
 
   return (
@@ -90,15 +106,53 @@ export default function DrinkDetails({ history }) {
         <img src={ ShareIcon } alt="img share button" />
         Compartilhar
       </button>
+
       <button
+        type="button"
+        data-testid="favorite-btn"
+        onClick={ handleFavoriteButton }
+        src={ favorite ? (blackHeartIcon) : (whiteHeartIcon) }
+      >
+        Favorite
+        {/* <img src={ blackHeartIcon } alt="blackHeartIcon" /> */}
+      </button>
+      { favorite ? (
+        <img src={ blackHeartIcon } alt="botaoFavoritado" />
+      ) : (
+        <img src={ whiteHeartIcon } alt="botaoNãoFavoritado" />
+      )}
+
+      {/* {favorite
+        ? (
+          <button
+            type="button"
+            data-testid="favorite-btn"
+            onClick={ handleFavoriteButton }
+          >
+            <img src={ blackHeartIcon } alt="blackHeartIcon" />
+          </button>)
+        : (
+          <button
+            type="button"
+            data-testid="favorite-btn"
+            onClick={ handleFavoriteButton }
+          >
+            <img src={ whiteHeartIcon } alt="whiteHeartIcon" />
+          </button>)} */}
+
+      {/*  <button
         type="button"
         data-testid="favorite-btn"
         onClick={ handleFavoriteButton }
       >
         Favorite
-      </button>
+        {favorite ? (<img src={ blackHeartIcon } alt="blackHeartIcon" />)
+          : (<img src={ whiteHeartIcon } alt="whiteHeartIcon" />) }
+      </button> */}
+
       <br />
       <br />
+
       DrinkDetails:
       {
         apiRecipeDetails?.drinks !== undefined
