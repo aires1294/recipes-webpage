@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import copy from 'clipboard-copy';
 import myContext from '../context/myContext';
@@ -8,10 +8,15 @@ import ShareIcon from '../images/shareIcon.svg';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
 
-export default function DrinkDetails({ history }) {
-  const { apiRecipeDetails, setApiRecipeDetails } = useContext(myContext);
+export default function DrinkDetails() {
+  const {
+    apiRecipeDetails,
+    setApiRecipeDetails,
+    inProgressRecipes,
+  } = useContext(myContext);
   const paramsUrl = useParams();
   const paramsId = paramsUrl.id;
+  const history = useHistory();
   const [ingrediente, setIngrediente] = useState([]);
   const [measure, setMeasure] = useState([]);
   const [copyMessage, setCopyMessage] = useState(false);
@@ -26,7 +31,6 @@ export default function DrinkDetails({ history }) {
   useEffect(() => {
     const setApi = async () => {
       const responseApi = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${paramsUrl.id}`);
-      console.log(responseApi);
       const result = await responseApi.json();
       setApiRecipeDetails(result);
       const respondeResult = result.drinks[0];
@@ -94,7 +98,10 @@ export default function DrinkDetails({ history }) {
           data-testid="start-recipe-btn"
           onClick={ handleButtonDetails }
         >
-          Start Recipe
+          {Object.keys(inProgressRecipes.drinks)
+            .every((id) => id !== paramsId)
+            ? 'Start Recipe'
+            : 'Continue Recipe'}
         </button>
       </div>
       {copyMessage && (<p>Link copied!</p>)}

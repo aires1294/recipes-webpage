@@ -16,20 +16,21 @@ export default function DrinksCarousel() {
   }, []);
 
   return (
-    <div>
-      DrinksCarousel
-      <div className="carousel">
-        {apiDrinksDetails.map((e, index) => (
-          <div className="carouselItem" key={ index }>
-            <p data-testid={ `${index}-recommendation-card` } />
-            <img
-              src={ e.strDrinkThumb }
-              alt="drinks"
-              data-testid={ `${index}-recommendation-title` }
-            />
-          </div>
-        ))}
-      </div>
+    <div style={ { overflowX: 'scroll', display: 'flex' } }>
+      {apiDrinksDetails.map((e, index) => (
+        <div
+          key={ index }
+          style={ { width: '51%' } }
+          data-testid={ `${index}-recommendation-card` }
+        >
+          <img
+            src={ e.strDrinkThumb }
+            alt="drinks"
+          />
+          <p data-testid={ `${index}-recommendation-title` }>{e.strDrink}</p>
+        </div>
+      ))}
     </div>
+
   );
 }

@@ -11,23 +11,24 @@ export default function MealsCarousel() {
       /* console.log(responseApi); */
       const result = await responseApiMeals.json();
       setApiMealsDetails(result.meals.slice(0, numberSix));
-      const teste = result.meals.slice(0, numberSix);
-      console.log(teste);
     }; setApiMeals();
   }, []);
 
   return (
     <div>
       MealsCarousel
-      <div>
+      <div style={ { overflowX: 'scroll', display: 'flex' } }>
         {apiMealsDetails.map((e, index) => (
-          <div key={ index }>
-            <p data-testid={ `${index}-recommendation-card` } />
+          <div
+            style={ { width: '51%' } }
+            key={ index }
+            data-testid={ `${index}-recommendation-card` }
+          >
             <img
               src={ e.strMealThumb }
               alt="meals"
-              data-testid={ `${index}-recommendation-title` }
             />
+            <p data-testid={ `${index}-recommendation-title` }>{e.strMeal}</p>
           </div>
         ))}
       </div>
