@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import copy from 'clipboard-copy';
 import myContext from '../context/myContext';
@@ -9,15 +9,21 @@ import ShareIcon from '../images/shareIcon.svg';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
 
-export default function MealDetails({ history }) {
-  const { apiRecipeDetails, setApiRecipeDetails } = useContext(myContext);
+export default function MealDetails() {
+  const {
+    apiRecipeDetails,
+    setApiRecipeDetails,
+    inProgressRecipes,
+  } = useContext(myContext);
   const paramsUrl = useParams();
   const paramsId = paramsUrl.id;
+  const history = useHistory();
   const [ingrediente, setIngrediente] = useState([]);
   const [measure, setMeasure] = useState([]);
   const [copyMessage, setCopyMessage] = useState(false);
   const [favoritesMeals, setFavoritesMeals] = useState([]);
   const [favorite, setFavorite] = useState(false);
+
   /* const { apiDrinksDetails, setApiDrinksDetails } = useContext(myContext); */
   /* const [drinksRecommendation, setDrinksRecommendation] = useState([]); */
   /* const { location } = useHistory(); */
@@ -76,7 +82,6 @@ export default function MealDetails({ history }) {
       setFavoritesMeals(newFavoritesMeals);
       localStorage.setItem('favoriteRecipes', JSON.stringify(newFavoritesMeals));
       setFavorite(false);
-      console.log(favoritesMeals);
     } else {
       const newFavoritesMeals = [...favoritesMeals, {
         id: apiRecipeDetails?.meals[0].idMeal,
@@ -101,7 +106,10 @@ export default function MealDetails({ history }) {
           data-testid="start-recipe-btn"
           onClick={ handleButtonDetails }
         >
-          Start Recipe
+          {Object.keys(inProgressRecipes.meals)
+            .every((id) => id !== paramsId)
+            ? 'Start Recipe'
+            : 'Continue Recipe'}
         </button>
       </div>
       {copyMessage && (<p>Link copied!</p>)}

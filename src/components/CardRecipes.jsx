@@ -17,20 +17,20 @@ function CardRecipes() {
     setFavoriteRecipes,
     doneRecipes,
     setDoneRecipes,
+    setInProgressRecipes,
   } = useContext(myContext);
 
   const { pathname } = useLocation();
 
   const { id } = useParams();
-  console.log(useParams());
 
   const { push } = useHistory();
 
   const [management, setManagement] = useState(false);
   const [data, setData] = useState({});
   const [ingredients, setIngredients] = useState([]);
-  const [type, setType] = useState('');
   const [check, setCheck] = useState([]);
+  const [type, setType] = useState('');
 
   useEffect(() => {
     const comparationFunction = async () => {
@@ -79,6 +79,7 @@ function CardRecipes() {
       };
       setItem('inProgressRecipes', localObject);
       setCheck([...check, ingredient]);
+      setInProgressRecipes(localObject);
     } else {
       const localObject = {
         ...returnLocalStorage,
@@ -89,6 +90,7 @@ function CardRecipes() {
       };
       setItem('inProgressRecipes', localObject);
       setCheck(check.filter((e) => e !== ingredient));
+      setInProgressRecipes(localObject);
     }
   };
 
